@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+       // 我在这个页面去访问别的站点的数据，这个时候就会产生跨域.
+       // 主站点是天猫，我现在想去请求极速数据. 这个网站是一个数据接口网站.
+       // 这时候就会出现跨域，就是跨域名访问.
+       <script>
+            var xhr=new XMLHttpRequest();
+            xhr.open("get","http://api.jisuapi.com/shouji/query?appkey=755a617e607a789e&shouji=13500000001");
+            xhr.send(null);
+            xhr.onreadystatechange=function(){
+                    if(xhr.readyState==4 && xhr.status==200){
+                         var data=xhr.responseText;
+                         alert(data);
+                    }
+            }
+       </script>
+</body>
+</html>

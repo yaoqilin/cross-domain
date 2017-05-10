@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+            body{
+                 overflow: hidden;
+            }
+            .main{
+                 width: 700px;
+                 margin: 200px auto;
+            }
+            .keywords{
+                  width: 500px;
+                  font-size: 28px;
+            }
+            input[type=button]{
+                 font-size: 28px;
+            }
+            .message{
+                 border: 1px solid #ccc;
+                 width: 500px;
+                 margin-left: -137px;
+                border-top:none;
+            }
+            .message ul{
+                 margin: 0;
+                 padding: 0;
+                 list-style: none;
+            }
+            .message ul li{
+                 padding: 5px;
+                 cursor: pointer;
+            }
+    </style>
+</head>
+<script src="./jquery-3.1.1/jquery-3.1.1.js"></script>
+<body>
+    <div align="center" class="main">
+        <input type="text" class="keywords">
+        <input type="button" value="搜索">
+        <div class="message" align="left" style="display: none;">
+            <ul>
+
+            </ul>
+        </div>
+    </div>
+    <script>
+
+            //如果页面加载直接给li 元素绑定事件，你是获取不到li元素
+            //我们可以使用jQuery 给我们提供的事件委托.
+
+
+            $(".message ul").on("mouseover","li",function(){
+                 // alert("a");
+                  this.style.background="red";
+            })
+            $(".message ul").on("mouseout","li",function(){
+                // alert("a");
+                this.style.background="white";
+            })
+
+
+            function getInfo(obj){
+
+                console.log(obj);
+                //解析数据，然后把message 里面ul 里面的li 元素的数据替换
+
+                var results=obj.result;
+                document.querySelector(".message>ul").innerHTML="";
+                for(var i=0;i<results.length;i++){
+                     var li=document.createElement("li");
+                     li.innerHTML=results[i].word;
+                     document.querySelector(".message>ul").appendChild(li);
+                }
+            }
+            document.querySelector(".keywords").onkeyup=function(){
+
+                var keywords=this.value;
+
+                //我要对这个关键字进行一个判断
+                if(keywords.length>0){
+                        //我根据这个关键字去获取数据，获取到数据之后
+                        //加载到列表去，
+                        //显示这个区域message
+                    document.querySelector(".message").style.display="block";
+                    //把关键给360 的这个搜索接口，让它来给我结果
+                    //使用script 标签去发送请求.
+                    var script=document.createElement("script");
+                    script.src="https://sug.so.360.cn/suggest?callback=getInfo&encodein=utf-8&encodeout=utf-8&format=json&fields=word,obdata&word="+keywords;
+                    document.body.appendChild(script);
+
+                }else{
+
+                       //隐藏message
+                      document.querySelector(".message").style.display="none";
+
+                }
+                //因为我现在给服务器发送请求，跨域的请求，
+                //现在采用的跨域方案是jsonp  jsonp 只支持get 方式的跨域，
+                //并不支持post,
+                //如果我要给跨域的服务器传递非常多数据，get 对请求的数据的大小有限制，传不过去.
+
+                //我们就要处理post 方式的跨域
+
+                //使用一个叫做cors 的方案  跨域资源共享. 其实这个是需要在服务器端进行一个配置
+                //其实就服务端给客户端一个响应头，就搞定.
+            };
+
+
+    </script>
+</body>
+</html>

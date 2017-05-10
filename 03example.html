@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<input type="button" value="通过script 标签去发送请求">
+<script>
+        //定义成一个全局的函数
+        function getInfo(obj){
+            console.log(obj);
+        }
+        document.querySelector("input").onclick=function(){
+              //点击这个按钮，我给jd 发送请求.
+              //http://www.jd.com/jd.php
+              //假设我使用XMLHttpRequest 很明显就跨域了
+             var script=document.createElement("script");
+             //这个请求暂时是没有发送出去.
+             //把这个标签挂载到页面上面才能够发送请求callback 跨域的通用的参数名称.
+             script.src="http://www.jd.com/jd.php?callback=getInfo";
+
+             //因为现在服务端给我返回的数据{"username":"zhangsan","age":11}
+             //客户端以js 的方式去解析这个数据{"username":"zhangsan","age":11}
+             //不符合js 的语法，所以就报错了.
+
+             document.body.appendChild(script);
+
+              //客户端浏览器得到是这样的数据getInfo({username: "zhangsan", age: 11})
+              //以js 的方式去解析，就会去调用getInfo  的函数.
+
+             //我现在的目的是想在页面里面得到这个服务端返回的数据
+             //1:客户端给服务端传递一个回调函数 ,它还需要定义一个函数
+             //2:服务端返回的是一个回调函数的调用，并且将服务端的数据包在这个函数的调用里面.
+
+              //现在我只能解决get 方式的跨域，我们把这个种跨域叫做jsonp
+              //把数据作为参数传递过来
+              //为什么只能解决get 方式的跨域，底层使用script 标签发送请求
+              //src href 这些发送的请求都是get 请求.
+              //jsonp ，客户端给服务端传递一个回调函数，服务端返回的是一个回调函数的调用，并且将数据放在回调函数里面作为参数传递过来.
+        }
+</script>
+</body>
+</html>
